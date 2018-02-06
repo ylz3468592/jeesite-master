@@ -80,10 +80,13 @@
 		</if>
 		<if test="veStatus != null and  veStatus != '' ">
 			AND a.ve_status=#{veStatus}
+		</if>
+		<if test="1==1">
+			ORDER BY a.ve_create_time desc
 		</if>					
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
+				<!-- ORDER BY ${page.orderBy} -->
 			</when>
 			<otherwise>
 			</otherwise>

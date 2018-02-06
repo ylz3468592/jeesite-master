@@ -98,10 +98,13 @@
 		</if>
 		<if test="imStatus != null and  imStatus != '' ">
 			AND a.im_status=#{imStatus}
+		</if>
+		<if test="1==1">
+			ORDER BY a.im_create_time desc
 		</if>				
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
+				<!-- ORDER BY ${page.orderBy} -->
 			</when>
 			<otherwise>
 			</otherwise>
