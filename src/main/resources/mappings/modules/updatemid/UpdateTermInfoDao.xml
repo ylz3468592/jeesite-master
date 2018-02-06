@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.updatemid.dao.UpdateTermInfoDao">
+    
+	<sql id="updateTermInfoColumns">
+		a.id AS "id",
+		a.ut_update_time AS "utUpdateTime",
+		a.ut_term_id AS "utTermId",
+		a.ut_ui_id AS "utUiId",
+		a.empty_1 AS "empty1",
+		a.empty_2 AS "empty2"
+	</sql>
+	
+	<sql id="updateTermInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="UpdateTermInfo">
+		SELECT 
+			<include refid="updateTermInfoColumns"/>
+		FROM update_term_info a
+		<include refid="updateTermInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findUpdateInfo" resultType="UpdateTermInfo">
+		SELECT 
+			<include refid="updateTermInfoColumns"/>
+		FROM update_term_info a
+		<include refid="updateTermInfoJoins"/>
+		WHERE a.ut_term_id = #{termId} and a.ut_ui_id = #{infoId}
+	</select>
+	
+	<select id="findList" resultType="UpdateTermInfo">
+		SELECT 
+			<include refid="updateTermInfoColumns"/>
+		FROM update_term_info a
+		<include refid="updateTermInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UpdateTermInfo">
+		SELECT 
+			<include refid="updateTermInfoColumns"/>
+		FROM update_term_info a
+		<include refid="updateTermInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO update_term_info(
+			id,
+			ut_update_time,
+			ut_term_id,
+			ut_ui_id,
+			empty_1,
+			empty_2
+		) VALUES (
+			#{id},
+			#{utUpdateTime},
+			#{utTermId},
+			#{utUiId},
+			#{empty1},
+			#{empty2}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE update_term_info SET 	
+			ut_update_time = #{utUpdateTime},
+			ut_term_id = #{utTermId},
+			ut_ui_id = #{utUiId},
+			empty_1 = #{empty1},
+			empty_2 = #{empty2}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM update_term_info
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteUpdateInfo">
+		DELETE FROM update_term_info
+		WHERE id = #{id}
+	</update>
+</mapper>

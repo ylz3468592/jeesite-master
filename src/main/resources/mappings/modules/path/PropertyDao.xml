@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.path.dao.PropertyDao">
+    
+	<sql id="propertyColumns">
+		a.id AS "id",
+		a.key AS "key",
+		a.value AS "value"
+	</sql>
+	
+	<sql id="propertyJoins">
+	</sql>
+    
+	<select id="get" resultType="Property">
+		SELECT 
+			<include refid="propertyColumns"/>
+		FROM property a
+		<include refid="propertyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getPath" resultType="Property">
+		SELECT 
+			<include refid="propertyColumns"/>
+		FROM property a
+		<include refid="propertyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Property">
+		SELECT 
+			<include refid="propertyColumns"/>
+		FROM property a
+		<include refid="propertyJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Property">
+		SELECT 
+			<include refid="propertyColumns"/>
+		FROM property a
+		<include refid="propertyJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO property(
+			id,
+			key,
+			value
+		) VALUES (
+			#{id},
+			#{key},
+			#{value}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE property SET 	
+			key = #{key},
+			value = #{value}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM property
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

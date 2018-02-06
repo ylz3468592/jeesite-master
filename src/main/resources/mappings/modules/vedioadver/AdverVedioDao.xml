@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.vedioadver.dao.AdverVedioDao">
+    
+	<sql id="adverVedioColumns">
+		a.id AS "id",
+		a.ve_title AS "veTitle",
+		a.ve_path AS "vePath",
+		a.ve_create_time AS "veCreateTime",
+		iu.name AS "userChecker.name",
+		iu.id AS "userChecker.id",
+		u.name AS "user.name",
+		a.ve_check_time AS "veCheckTime",
+		a.ve_status AS "veStatus",
+		t.te_no AS "term.teNo"
+	</sql>
+		
+	<sql id="adverVedioJoins">
+		left join sys_user iu on iu.id=a.ve_checker
+		left join sys_user u on u.id=a.ve_creater
+		join info_term it on it.it_info_id=a.id
+		left join term t on t.id=it.it_term_id
+	</sql>
+    
+	<select id="get" resultType="AdverVedio">
+		SELECT 
+			<include refid="adverVedioColumns"/>
+		FROM adver_vedio a
+		<include refid="adverVedioJoins"/>
+		WHERE a.id = #{id} 
+	</select>
+	
+	<select id="findVeAdver" resultType="AdverVedio">
+		SELECT 
+			<include refid="adverVedioColumns"/>
+		FROM adver_vedio a
+		<include refid="adverVedioJoins"/>
+		WHERE a.id = #{id} and t.te_no=#{teNo}
+	</select>
+	
+	<select id="findList" resultType="AdverVedio">
+		SELECT 
+			<include refid="adverVedioColumns"/>
+		FROM adver_vedio a
+		<include refid="adverVedioJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AdverVedio">
+		SELECT 
+			<include refid="adverVedioColumns"/>
+		FROM adver_vedio a
+		<include refid="adverVedioJoins"/>
+		<where>
+			1=1
+		</where>
+		<if test="veTitle != null and  veTitle!='' ">
+			AND a.ve_title like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{veTitle}, '%')</if>
+		</if>
+		<if test="term != null and  term.teNo != null ">
+			AND t.te_no like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{term.teNo}, '%')</if>
+		</if>
+		<if test="user != null and  user.name != null ">
+			AND u.name like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{user.name}, '%')</if>
+		</if>
+		<if test="user != null and  user.id != null ">
+			AND a.ve_creater=#{user.id}
+		</if>
+		<if test="veStatus != null and  veStatus != '' ">
+			AND a.ve_status=#{veStatus}
+		</if>					
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO adver_vedio(
+			id,
+			ve_title,
+			ve_path,
+			ve_create_time,
+			ve_checker,
+			ve_creater,
+			ve_check_time,
+			ve_status
+		) VALUES (
+			#{id},
+			#{veTitle},
+			#{vePath},
+			#{veCreateTime},
+			#{userChecker.id},
+			#{user.id},
+			#{veCheckTime},
+			#{veStatus}
+		)
+	</insert>
+	
+	<insert id="mySave">
+		INSERT INTO adver_vedio(
+			id,
+			ve_title,
+			ve_path,
+			ve_create_time,
+			ve_checker,
+			ve_creater,
+			ve_check_time,
+			ve_status
+		) VALUES (
+			#{id},
+			#{veTitle},
+			#{vePath},
+			#{veCreateTime},
+			#{userChecker.id},
+			#{user.id},
+			#{veCheckTime},
+			#{veStatus}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE adver_vedio SET 	
+			ve_title = #{veTitle},
+			ve_path = #{vePath},
+			
+			ve_checker = #{userChecker.id},
+			
+			ve_check_time = #{veCheckTime},
+			ve_status = #{veStatus}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateNot">
+		UPDATE adver_vedio SET 	
+			ve_title = #{veTitle},
+			
+			
+			ve_checker = #{userChecker.id},
+		
+			ve_check_time = #{veCheckTime},
+			ve_status = #{veStatus}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM adver_vedio
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

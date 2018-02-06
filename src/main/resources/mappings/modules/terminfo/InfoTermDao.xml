@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.terminfo.dao.InfoTermDao">
+    
+	<sql id="infoTermColumns">
+		a.id AS "id",
+		a.it_term_id AS "itTermId",
+		a.it_info_id AS "itInfoId",
+		a.empty_1 AS "empty1",
+		a.empty_2 AS "empty2",
+		a.empty_3 AS "empty3",
+		a.empty_4 AS "empty4"
+	</sql>
+	
+	<sql id="infoTermJoins">
+	</sql>
+    
+	<select id="get" resultType="InfoTerm">
+		SELECT 
+			<include refid="infoTermColumns"/>
+		FROM info_term a
+		<include refid="infoTermJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findTermInfo" resultType="InfoTerm" >
+		SELECT 
+			<include refid="infoTermColumns"/>
+		FROM info_term a
+		<include refid="infoTermJoins"/>
+		WHERE a.it_term_id = #{termId} and a.it_info_id=#{infoId}
+	</select>
+	
+	<select id="findList" resultType="InfoTerm">
+		SELECT 
+			<include refid="infoTermColumns"/>
+		FROM info_term a
+		<include refid="infoTermJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="InfoTerm">
+		SELECT 
+			<include refid="infoTermColumns"/>
+		FROM info_term a
+		<include refid="infoTermJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO info_term(
+			id,
+			it_term_id,
+			it_info_id
+			
+
+		) VALUES (
+			#{id},
+			#{itTermId},
+			#{itInfoId}
+			
+
+		)
+	</insert>
+	
+	<update id="updateTermInfo">
+		UPDATE info_term SET
+					id = #{id},	
+			it_term_id = #{itTermId},
+			it_info_id = #{itInfoId},
+			empty_1 = #{empty1},
+			empty_2 = #{empty2},
+			empty_3 = #{empty3},
+			empty_4 = #{empty4}
+		WHERE id=#{id}
+	</update>
+	
+	<update id="deleteInfoTerm">
+		DELETE FROM info_term
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

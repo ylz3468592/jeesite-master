@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.approved.dao.ApprovedDao">
+    
+	<sql id="approvedColumns">
+		a.id AS "id",
+		a.ap_info_id AS "apInfoId",
+		a.ap_sy_id_first AS "apSyIdFirst",
+		a.ap_sy_id_second AS "apSyIdSecond",
+		a.ap_progress AS "apProgress",
+		a.ap_remarks AS "apRemarks",
+		a.ap_check_time AS "apCheckTime",
+		a.ap_notice AS "apNotice"
+	</sql>
+	
+	<sql id="approvedJoins">
+	</sql>
+    
+	<select id="get" resultType="Approved">
+		SELECT 
+			<include refid="approvedColumns"/>
+		FROM approved a
+		<include refid="approvedJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Approved">
+		SELECT 
+			<include refid="approvedColumns"/>
+		FROM approved a
+		<include refid="approvedJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Approved">
+		SELECT 
+			<include refid="approvedColumns"/>
+		FROM approved a
+		<include refid="approvedJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO approved(
+			id,
+			ap_info_id,
+			ap_sy_id_first,
+			ap_sy_id_second,
+			ap_progress,
+			ap_remarks,
+			ap_check_time,
+			ap_notice
+		) VALUES (
+			#{id},
+			#{apInfoId},
+			#{apSyIdFirst},
+			#{apSyIdSecond},
+			#{apProgress},
+			#{apRemarks},
+			#{apCheckTime},
+			#{apNotice}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE approved SET 	
+			ap_info_id = #{apInfoId},
+			ap_sy_id_first = #{apSyIdFirst},
+			ap_sy_id_second = #{apSyIdSecond},
+			ap_progress = #{apProgress},
+			ap_remarks = #{apRemarks},
+			ap_check_time = #{apCheckTime},
+			ap_notice = #{apNotice}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM approved
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.voiceinfo.dao.VoiceInfoDao">
+    
+	<sql id="voiceInfoColumns">
+		a.id AS "id",
+		a.vi_co_id AS "coId",
+		a.vi_sy_id AS "syId",
+		a.vi_te_id AS "termNo",
+		a.vi_leave_date AS "viLeaveDate",
+		a.vi_path AS "viPath",
+		a.vi_save_time AS "viSaveTime",
+		a.vi_co_tel AS "viCoTel"
+	</sql>
+	
+	<sql id="voiceInfoJoins">
+	left join common_user c on c.id=a.vi_co_id
+	left join sys_user s on s.id=a.vi_sy_id
+	left join term t on t.id=a.vi_te_id 
+	</sql>
+    
+	<select id="get" resultType="VoiceInfo">
+		SELECT 
+			<include refid="voiceInfoColumns"/>
+		FROM voice_info a
+		<include refid="voiceInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getVoice" resultType="VoiceInfo">
+		SELECT 
+			<include refid="voiceInfoColumns"/>
+		FROM voice_info a where a.vi_te_id  in (select  te_no from term where te_sys_id = #{id})
+	</select>
+	
+	<select id="findList" resultType="VoiceInfo">
+		SELECT 
+			<include refid="voiceInfoColumns"/>
+		FROM voice_info a
+		<include refid="voiceInfoJoins"/>
+		<where>
+			1=1
+		</where>
+		<if test="term != null and  term.teNo != null ">
+			AND t.te_no like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{term.teNo}, '%')</if>
+		</if>
+		<if test="coUser != null and  coUser.coName != null ">
+			AND c.co_name like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{coUser.coName}, '%')</if>
+		</if>
+		<if test="coUser != null and  coUser.coUserNo != null ">
+			AND c.co_user_no like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{coUser.coUserNo}, '%')</if>
+		</if>
+		<if test="user != null and  user.id != null ">
+			AND a.vi_sy_id=#{user.id}
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="VoiceInfo">
+		SELECT 
+			<include refid="voiceInfoColumns"/>
+		FROM voice_info a
+		<include refid="voiceInfoJoins"/>
+		<where>
+			1=1
+		</where>
+		<if test="term != null and  term.teNo != null ">
+			AND t.te_no like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{term.teNo}, '%')</if>
+		</if>
+		<if test="coUser != null and  coUser.coName != null ">
+			AND c.co_name like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{coUser.coName}, '%')</if>
+		</if>
+		<if test="coUser != null and  coUser.coUserNo != null ">
+			AND c.co_user_no like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{coUser.coUserNo}, '%')</if>
+		</if>
+		<if test="user != null and  user.id != null ">
+			AND a.vi_sy_id=#{user.id}
+		</if>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO voice_info(
+			id,
+			vi_co_id,
+			vi_leave_date,
+			vi_sy_id,
+			vi_te_id,
+			vi_path,
+			vi_save_time
+		) VALUES (
+			#{id},
+			#{viCoId},
+			#{viLeaveDate},
+			#{viSyId},
+			#{viTeId},
+			#{viPath},
+			#{viSaveTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE voice_info SET 	
+			vi_co_id = #{viCoId},
+			vi_leave_date = #{viLeaveDate},
+			vi_sy_id = #{viSyId},
+			vi_te_id = #{viTeId},
+			vi_path = #{viPath},
+			vi_save_time = #{viSaveTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM voice_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

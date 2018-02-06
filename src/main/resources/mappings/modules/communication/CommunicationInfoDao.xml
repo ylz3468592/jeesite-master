@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.communication.dao.CommunicationInfoDao">
+    
+	<sql id="communicationInfoColumns">
+		a.id AS "id",
+		a.ci_co_id AS "ciCoId",
+		a.ci_te_id AS "ciTeId",
+		a.ci_take_time AS "ciTakeTime",
+		a.ci_save_time AS "ciSaveTime",
+		a.ci_sy_id AS "ciSyId",
+		a.ci_type AS "ciType",
+		a.ci_start_time AS "ciStartTime"
+	</sql>
+	
+	<sql id="communicationInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="CommunicationInfo">
+		SELECT 
+			<include refid="communicationInfoColumns"/>
+		FROM communication_info a
+		<include refid="communicationInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CommunicationInfo">
+		SELECT 
+			<include refid="communicationInfoColumns"/>
+		FROM communication_info a
+		<include refid="communicationInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CommunicationInfo">
+		SELECT 
+			<include refid="communicationInfoColumns"/>
+		FROM communication_info a
+		<include refid="communicationInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO communication_info(
+			id,
+			ci_co_id,
+			ci_te_id,
+			ci_take_time,
+			ci_save_time,
+			ci_sy_id,
+			ci_type,
+			ci_start_time
+		) VALUES (
+			#{id},
+			#{ciCoId},
+			#{ciTeId},
+			#{ciTakeTime},
+			#{ciSaveTime},
+			#{ciSyId},
+			#{ciType},
+			#{ciStartTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE communication_info SET 	
+			ci_co_id = #{ciCoId},
+			ci_te_id = #{ciTeId},
+			ci_take_time = #{ciTakeTime},
+			ci_save_time = #{ciSaveTime},
+			ci_sy_id = #{ciSyId},
+			ci_type = #{ciType},
+			ci_start_time = #{ciStartTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM communication_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

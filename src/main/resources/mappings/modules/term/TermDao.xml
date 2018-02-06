@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.term.dao.TermDao">
+    
+	<sql id="termColumns">
+		a.id AS "id",
+		a.te_no AS "teNo",
+		a.sim_no AS "simNo",
+		a.te_tel AS "teTel",
+		u.name AS "user.name",
+		u.id AS "user.id",
+		a.te_address AS "teAddress",
+		a.te_create_time AS "teCreateTime",
+		a.te_product_time AS "teProductTime",
+		a.te_status AS "teStatus",
+		a.empty_1 AS "empty1",
+		a.empty_2 AS "empty2"
+	</sql>
+	
+	<sql id="termJoins">
+		left join sys_user u on u.id=a.te_sys_id
+	</sql>
+    
+	<select id="get" resultType="Term">
+		SELECT 
+			<include refid="termColumns"/>
+		FROM term a
+		<include refid="termJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findTermByNo" resultType="Term">
+		SELECT 
+			<include refid="termColumns"/>
+		FROM term a
+		<include refid="termJoins"/>
+		WHERE a.te_no = #{teNo}
+	</select>
+	
+	<select id="findTermBySysId" resultType="Term">
+		SELECT 
+			<include refid="termColumns"/>
+		FROM term a
+		<include refid="termJoins"/>
+		WHERE a.te_sys_id = #{id}
+	</select>
+	
+	<select id="findTerm" resultType="Term">
+		SELECT 
+			<include refid="termColumns"/>
+		FROM term a
+		<include refid="termJoins"/>
+		WHERE a.te_no = #{teNo}
+	</select>
+	
+	<select id="findSysList" resultType="Term">
+		SELECT 
+			<include refid="termColumns"/>
+		FROM term a
+		<include refid="termJoins"/>
+	</select>
+	
+	<select id="findList" resultType="Term">
+		SELECT 
+			<include refid="termColumns"/>
+		FROM term a
+		<include refid="termJoins"/>
+		<where>
+			a.te_sys_id=#{user.id}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Term">
+		SELECT 
+			<include refid="termColumns"/>
+		FROM term a
+		<include refid="termJoins"/>
+		<where>
+			1=1
+		</where>
+		<if test="user != null and  user.name != null ">
+			AND u.name like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{user.name}, '%')</if>
+		</if>
+		<if test="teNo != null and  teNo !='' ">
+			AND a.te_no like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{teNo}, '%')</if>
+		</if>
+		<if test="teAddress != null and  teAddress !='' ">
+			AND a.te_address like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{teAddress}, '%')</if>
+		</if>				
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO term(
+			id,
+			te_no,
+			sim_no,
+			te_tel,
+			te_sys_id,
+			te_address,
+			te_create_time,
+			te_product_time,
+			te_status,
+			empty_1,
+			empty_2
+		) VALUES (
+			#{id},
+			#{teNo},
+			#{simNo},
+			#{teTel},
+			#{user.id},
+			#{teAddress},
+			#{teCreateTime},
+			#{teProductTime},
+			#{teStatus},
+			#{empty1},
+			#{empty2}
+		)
+	</insert>
+	
+	<update id="updateTerm">
+		UPDATE term SET 	
+			te_no = #{teNo},
+			sim_no = #{simNo},
+			te_tel = #{teTel},
+			te_address = #{teAddress},
+			te_create_time = #{teCreateTime},
+			te_product_time = #{teProductTime},
+			te_status = #{teStatus},
+			empty_1 = #{empty1},
+			empty_2 = #{empty2}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="update">
+		UPDATE term SET 	
+			te_no = #{teNo},
+			sim_no = #{simNo},
+			te_tel = #{teTel},
+			te_sys_id = #{user.id},
+			te_address = #{teAddress},
+			
+			te_product_time = #{teProductTime},
+			te_status = #{teStatus},
+			empty_1 = #{empty1},
+			empty_2 = #{empty2}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM term
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

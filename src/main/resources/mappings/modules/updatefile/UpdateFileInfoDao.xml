@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.updatefile.dao.UpdateFileInfoDao">
+    
+	<sql id="updateFileInfoColumns">
+		a.id AS "id",
+		a.ui_date AS "uiDate",
+		a.ui_file_path AS "uiFilePath",
+		a.ui_file_version AS "uiFileVersion",
+		t.te_no AS "term.teNo",
+		a.empty_1 AS "empty1",
+		a.empty_2 AS "empty2",
+		a.empty_3 AS "empty3",
+		a.empty_4 AS "empty4"
+	</sql>
+	
+	<sql id="updateFileInfoJoins">
+		join update_term_info ut on ut.ut_ui_id=a.id
+		left join term t on t.id=ut.ut_term_id
+	</sql>
+    
+	<select id="get" resultType="UpdateFileInfo">
+		SELECT 
+			<include refid="updateFileInfoColumns"/>
+		FROM update_file_info a
+		<include refid="updateFileInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findUpInfo" resultType="UpdateFileInfo">
+		SELECT 
+			<include refid="updateFileInfoColumns"/>
+		FROM update_file_info a
+		<include refid="updateFileInfoJoins"/>
+		WHERE a.id = #{id} and t.te_no=#{teNo}
+	</select>
+	
+	<select id="findList" resultType="UpdateFileInfo">
+		SELECT 
+			<include refid="updateFileInfoColumns"/>
+		FROM update_file_info a
+		<include refid="updateFileInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UpdateFileInfo">
+		SELECT 
+			<include refid="updateFileInfoColumns"/>
+		FROM update_file_info a
+		<include refid="updateFileInfoJoins"/>
+		<where>
+			1=1
+		</where>
+		<if test="term != null and  term.teNo != null ">
+			AND t.te_no like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{term.teNo}, '%')</if>
+		</if>
+		<if test="uiFileVersion != null and  uiFileVersion!='' ">
+			AND a.ui_file_version like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{uiFileVersion}, '%')</if>
+		</if>
+		<if test="empty1 !=null and empty1 !='' ">
+			AND a.empty_1=#{empty1}
+		</if>				
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO update_file_info(
+			id,
+			ui_date,
+			ui_file_path,
+			ui_file_version,
+			empty_1,
+			empty_2,
+			empty_3,
+			empty_4
+		) VALUES (
+			#{id},
+			#{uiDate},
+			#{uiFilePath},
+			#{uiFileVersion},
+			#{empty1},
+			#{empty2},
+			#{empty3},
+			#{empty4}
+		)
+	</insert>
+	
+	<insert id="mySave">
+		INSERT INTO update_file_info(
+			id,
+			ui_date,
+			ui_file_path,
+			ui_file_version,
+			empty_1,
+			empty_2,
+			empty_3,
+			empty_4
+		) VALUES (
+			#{id},
+			#{uiDate},
+			#{uiFilePath},
+			#{uiFileVersion},
+			#{empty1},
+			#{empty2},
+			#{empty3},
+			#{empty4}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE update_file_info SET 	
+			
+			ui_file_path = #{uiFilePath},
+			ui_file_version = #{uiFileVersion},
+			empty_1 = #{empty1},
+			empty_2 = #{empty2},
+			empty_3 = #{empty3},
+			empty_4 = #{empty4}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateNot">
+		UPDATE update_file_info SET 	
+			
+			
+			ui_file_version = #{uiFileVersion},
+			empty_1 = #{empty1},
+			empty_2 = #{empty2},
+			empty_3 = #{empty3},
+			empty_4 = #{empty4}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM update_file_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

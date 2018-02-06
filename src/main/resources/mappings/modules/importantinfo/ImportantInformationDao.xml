@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.importantinfo.dao.ImportantInformationDao">
+    
+	<sql id="importantInformationColumns">
+		a.id AS "id",
+		a.im_title AS "imTitle",
+		a.im_address AS "imAddress",
+		a.im_stop_time AS "imStopTime",
+		a.im_stop_type AS "imStopType",
+		a.im_stop_area AS "imStopArea",
+		a.im_stop_line AS "imStopLine",
+		a.im_create_time AS "imCreateTime",
+		u.name AS "user.name",
+		u.id As "user.id",
+		iu.name AS "userChecker.name",
+		iu.id AS "userChecker.id",
+		a.im_check_time AS "imCheckTime",
+		a.im_status AS "imStatus",
+		t.te_no AS "term.teNo",
+		a.im_stop_time_end AS "imStopTimeEnd"
+	</sql>
+	
+	<sql id="importantInformationJoins">
+		left join sys_user iu on iu.id=a.im_checker
+		left join sys_user u on u.id=a.im_creater
+		join info_term it on it.it_info_id=a.id
+		left join term t on t.id=it.it_term_id
+	</sql>
+    
+	<select id="get" resultType="ImportantInformation">
+		SELECT 
+			<include refid="importantInformationColumns"/>
+		FROM important_information a
+		<include refid="importantInformationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findOne" resultType="ImportantInformation">
+		SELECT 
+			<include refid="importantInformationColumns"/>
+		FROM important_information a
+		<include refid="importantInformationJoins"/>
+		WHERE a.id = #{id} and t.te_no=#{teNo}
+	</select>
+	
+	<select id="findList" resultType="ImportantInformation">
+		SELECT 
+			<include refid="importantInformationColumns"/>
+		FROM important_information a
+		<include refid="importantInformationJoins"/>
+		<where>
+			1=1
+		</where>
+		<if test="imTitle != null and  imTitle!='' ">
+			AND a.im_title like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{imTitle}, '%')</if>
+		</if>
+		<if test="term != null and  term.teNo != null ">
+			AND t.te_no like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{term.teNo}, '%')</if>
+		</if>
+		<if test="user != null and  user.name != null ">
+			AND u.name like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{user.name}, '%')</if>
+		</if>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ImportantInformation">
+		SELECT 
+			<include refid="importantInformationColumns"/>
+		FROM important_information a
+		<include refid="importantInformationJoins"/>
+		<where>
+			1=1
+		</where>
+		<if test="imTitle != null and  imTitle!='' ">
+			AND a.im_title like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{imTitle}, '%')</if>
+		</if>
+		<if test="term != null and  term.teNo != null ">
+			AND t.te_no like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{term.teNo}, '%')</if>
+		</if>
+		<if test="user != null and  user.name != null ">
+			AND u.name like 
+					<if test="dbName == 'mysql'">CONCAT('%', #{user.name}, '%')</if>
+		</if>
+		<if test="user != null and  user.id != null ">
+			AND a.im_creater=#{user.id}
+		</if>
+		<if test="imStatus != null and  imStatus != '' ">
+			AND a.im_status=#{imStatus}
+		</if>				
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO important_information(
+			id,
+			im_title,
+			im_address,
+			im_stop_time,
+			im_stop_type,
+			im_stop_area,
+			im_stop_line,
+			im_create_time,
+			im_creater,
+			im_checker,
+			im_check_time,
+			im_status,
+			im_stop_time_end
+		) VALUES (
+			#{id},
+			#{imTitle},
+			#{imAddress},
+			#{imStopTime},
+			#{imStopType},
+			#{imStopArea},
+			#{imStopLine},
+			#{imCreateTime},
+			#{user.id},
+			#{userChecker.id},
+			#{imCheckTime},
+			#{imStatus},
+			#{imStopTimeEnd}
+		)
+	</insert>
+	
+	<insert id="mySave">
+		INSERT INTO important_information(
+			id,
+			im_title,
+			im_address,
+			im_stop_time,
+			im_stop_type,
+			im_stop_area,
+			im_stop_line,
+			im_create_time,
+			im_creater,
+			im_checker,
+			im_check_time,
+			im_status,
+			im_stop_time_end
+		) VALUES (
+			#{id},
+			#{imTitle},
+			#{imAddress},
+			#{imStopTime},
+			#{imStopType},
+			#{imStopArea},
+			#{imStopLine},
+			#{imCreateTime},
+			#{user.id},
+			#{userChecker.id},
+			#{imCheckTime},
+			#{imStatus},
+			#{imStopTimeEnd}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE important_information SET 	
+			im_title = #{imTitle},
+			im_address = #{imAddress},
+			im_stop_time = #{imStopTime},
+			im_stop_type = #{imStopType},
+			im_stop_area = #{imStopArea},
+			im_stop_line = #{imStopLine},
+			
+			
+			im_checker = #{userChecker.id},
+			im_check_time = #{imCheckTime},
+			im_status = #{imStatus},
+			im_stop_time_end=#{imStopTimeEnd}
+		WHERE id = #{id}
+	</update>
+	
+	
+	
+	<update id="delete">
+		DELETE FROM important_information
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

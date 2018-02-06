@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gridman.dao.GridmanDao">
+    
+	<sql id="gridmanColumns">
+		a.id AS "id",
+		a.sys_u1_id AS "sysU1Id",
+		a.sys_u2_id AS "sysU2Id",
+		a.empty_1 AS "empty1",
+		a.empty_2 AS "empty2"
+	</sql>
+	
+	<sql id="gridmanJoins">
+	</sql>
+    
+	<select id="get" resultType="Gridman">
+		SELECT 
+			<include refid="gridmanColumns"/>
+		FROM gridman a
+		<include refid="gridmanJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getGrid" resultType="Gridman">
+		SELECT 
+			<include refid="gridmanColumns"/>
+		FROM gridman a
+		<include refid="gridmanJoins"/>
+		WHERE a.sys_u1_id = #{id}
+	</select>
+	
+	<select id="getCount" resultType="int">
+		SELECT count(id) from gridman
+		WHERE sys_u1_id = #{id}
+	</select>
+	
+	<!--根据二级网格员的id查询出所有一级网格员的id-->
+	<select id="findFirstById" resultType="Gridman">
+		SELECT 
+			<include refid="gridmanColumns"/>
+		FROM gridman a
+		<include refid="gridmanJoins"/>
+		WHERE a.sys_u2_id = #{id}
+	</select>
+	
+	<!--根据一级网格员的id查询出二级网格员的id-->
+	<select id="findSecondById" resultType="Gridman">
+		SELECT 
+			<include refid="gridmanColumns"/>
+		FROM gridman a
+		<include refid="gridmanJoins"/>
+		WHERE a.sys_u1_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Gridman">
+		SELECT 
+			<include refid="gridmanColumns"/>
+		FROM gridman a
+		<include refid="gridmanJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Gridman">
+		SELECT 
+			<include refid="gridmanColumns"/>
+		FROM gridman a
+		<include refid="gridmanJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gridman(
+			id,
+			sys_u1_id,
+			sys_u2_id,
+			empty_1,
+			empty_2
+		) VALUES (
+			#{id},
+			#{sysU1Id},
+			#{sysU2Id},
+			#{empty1},
+			#{empty2}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gridman SET 	
+			sys_u1_id = #{sysU1Id},
+			sys_u2_id = #{sysU2Id},
+			empty_1 = #{empty1},
+			empty_2 = #{empty2}
+		WHERE id = #{id}
+	</update>
+	
+	
+	
+	<update id="delete">
+		DELETE FROM gridman
+		WHERE id = #{id}
+	</update>
+	
+	
+	<update id="myDelete">
+		DELETE FROM gridman
+		WHERE sys_u1_id = #{sysU1Id} and
+			sys_u2_id = #{sysU2Id}
+	</update>
+</mapper>

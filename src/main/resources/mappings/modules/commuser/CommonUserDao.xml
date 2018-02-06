@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.commuser.dao.CommonUserDao">
+    
+	<sql id="commonUserColumns">
+		a.id AS "id",
+		a.co_name AS "coName",
+		a.co_address AS "coAddress",
+		a.co_tel AS "coTel",
+		a.co_user_no AS "coUserNo",
+		a.co_email AS "coEmail",
+		a.co_term_no AS "coTermNo",
+		a.create_time AS "createTime",
+		a.empty_1 AS "empty1",
+		a.empty_2 AS "empty2",
+		a.empty_3 AS "empty3",
+		a.empty_4 AS "empty4"
+	</sql>
+	
+	<sql id="commonUserJoins">
+	</sql>
+    
+	<select id="get" resultType="CommonUser">
+		SELECT 
+			<include refid="commonUserColumns"/>
+		FROM common_user a
+		<include refid="commonUserJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CommonUser">
+		SELECT 
+			<include refid="commonUserColumns"/>
+		FROM common_user a
+		<include refid="commonUserJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CommonUser">
+		SELECT 
+			<include refid="commonUserColumns"/>
+		FROM common_user a
+		<include refid="commonUserJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO common_user(
+			id,
+			co_name,
+			co_address,
+			co_tel,
+			co_user_no,
+			co_email,
+			co_term_no,
+			create_time,
+			empty_1,
+			empty_2,
+			empty_3,
+			empty_4
+		) VALUES (
+			#{id},
+			#{coName},
+			#{coAddress},
+			#{coTel},
+			#{coUserNo},
+			#{coEmail},
+			#{coTermNo},
+			#{createTime},
+			#{empty1},
+			#{empty2},
+			#{empty3},
+			#{empty4}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE common_user SET 	
+			co_name = #{coName},
+			co_address = #{coAddress},
+			co_tel = #{coTel},
+			co_user_no = #{coUserNo},
+			co_email = #{coEmail},
+			co_term_no = #{coTermNo},
+			create_time = #{createTime},
+			empty_1 = #{empty1},
+			empty_2 = #{empty2},
+			empty_3 = #{empty3},
+			empty_4 = #{empty4}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM common_user
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
